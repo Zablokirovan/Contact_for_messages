@@ -4,7 +4,7 @@
 """
 
 import Bitrix24
-import modify_date
+import Modify_date
 import Base
 
 def main():
@@ -15,7 +15,7 @@ def main():
     deals = Bitrix24.get_deals()
 
     #Editing received data
-    modify_deals, contact_id = modify_date.deals_modify(deals)
+    modify_deals, contact_id = Modify_date.deals_modify(deals)
 
     #Loading the received data into the PostgreSQL database
     Base.insert_contact_in_deal(modify_deals)
@@ -24,7 +24,7 @@ def main():
     contact_info = Bitrix24.get_contact_in_deals(contact_id)
 
     #Changing received contact data
-    modify_contact = modify_date.modify_date_contact(contact_info)
+    modify_contact = Modify_date.modify_date_contact(contact_info)
 
     #Loading contact data in contact locations
     Base.insertc_contact(modify_contact)
