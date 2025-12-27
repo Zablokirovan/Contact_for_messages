@@ -1,7 +1,11 @@
+"""
+File for loading valid data into tables
+"""
+
 import psycopg2
 import  os
 
-
+#Connecting to a PostgreSQL Database
 db_client=psycopg2.connect(
     dbname=os.getenv('DB_NAME'),
     host= os.getenv("DB_HOST"),
@@ -11,6 +15,9 @@ db_client=psycopg2.connect(
 )
 
 def insert_contact_in_deal(deals: list):
+    """
+    Function for adding information about transactions and contacts to the database
+    """
     with db_client.cursor() as cur:
         cur.executemany("""
             INSERT INTO "MessagingCore".contact_in_deal (
@@ -36,8 +43,14 @@ def insert_contact_in_deal(deals: list):
     db_client.commit()
 
 
-
 def insertc_contact(contact):
+    """
+    Function for downloading contact information
+
+    :param contact:
+    :return:
+
+    """
     with db_client.cursor() as cur:
         cur.executemany("""
               INSERT INTO "MessagingCore".contact_info (contact_id, phone_raw, phone_num_clear)
