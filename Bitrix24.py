@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import datetime, timedelta, timezone
 import bot_tg
 
 from dotenv import load_dotenv
@@ -14,11 +14,13 @@ webhook = os.getenv("BITRIX_WEB_HOOK")
 # requests to avoid exceeding Bitrix24 limits
 b = Bitrix(webhook, respect_velocity_policy=True)
 
-# Date from which to upload
-start_date = datetime.date(2025, 5, 20).strftime('%Y-%m-%dT00:00:00')
-# Date up to what date to upload
-end_date = datetime.date(2025, 5, 30).strftime('%Y-%m-%dT00:00:00')
+tz = timezone(timedelta(hours=5))
+now = datetime.now(tz)
 
+# Date from which to upload
+start_date = (now - timedelta(days=1)).strftime('%Y-%m-%dT00:00:00+05:00')
+# Date up to what date to upload
+end_date   = (now - timedelta(days=1)).strftime('%Y-%m-%dT23:59:59+05:00')
 
 def get_deals():
     """
@@ -27,6 +29,7 @@ def get_deals():
     :return: Dict
     """
     try:
+
         return b.get_all('crm.deal.list', params={'filter': {
             '>=DATE_CREATE': start_date,
             '<=DATE_CREATE': end_date,
