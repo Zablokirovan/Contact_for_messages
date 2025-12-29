@@ -3,20 +3,23 @@ File for loading valid data into tables
 """
 
 import psycopg2
-import  os
+import os
 
-#Connecting to a PostgreSQL Database
-db_client=psycopg2.connect(
+
+# Connecting to a PostgreSQL Database
+db_client = psycopg2.connect(
     dbname=os.getenv('DB_NAME'),
-    host= os.getenv("DB_HOST"),
+    host=os.getenv("DB_HOST"),
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
     port=os.getenv("DB_PORT")
 )
 
+
 def insert_contact_in_deal(deals: list):
     """
-    Function for adding information about transactions and contacts to the database
+    Function for adding information about transactions
+     and contacts to the database
     """
     with db_client.cursor() as cur:
         cur.executemany("""
@@ -53,7 +56,10 @@ def insertc_contact(contact):
     """
     with db_client.cursor() as cur:
         cur.executemany("""
-              INSERT INTO "MessagingCore".contact_info (contact_id, phone_raw, phone_num_clear)
+              INSERT INTO "MessagingCore".contact_info (
+              contact_id,
+              phone_raw,
+              phone_num_clear)
     VALUES (%s, %s, %s)
     ON CONFLICT (contact_id, phone_raw)
     DO UPDATE SET
@@ -61,7 +67,6 @@ def insertc_contact(contact):
         """, contact)
 
     db_client.commit()
-
 
 
 def insert_department(department):
